@@ -7,6 +7,32 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\Header\Header.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Header\Select.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Header\SizeSelector.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Header\Visibility.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Header\Header.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Header\Select.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Header\SizeSelector.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Header\Visibility.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

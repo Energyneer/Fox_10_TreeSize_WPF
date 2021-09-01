@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Task10.Model;
 
@@ -22,29 +23,42 @@ namespace Task10.Services
             return GetSubDirectory(dInfo);
         }
 
+        private FileNode ProcessingDirectory(DirectoryInfo dInfo)
+        {
+            FileNode node = null;
+            Thread thread = new Thread(() => node = GetSubDirectory(dInfo));
+            thread.Start();
+            thread.Join();
+            return node;
+        }
+
         private FileNode GetSubDirectory(DirectoryInfo dInfo)
         {
             FileNode node = new FileNode();
-
-            // directories
             AddSubDirectories(dInfo, node);
-
-            // files
             AddSubFiles(dInfo, node);
-
-            // calculating
             Calculating(dInfo, node);
-
             return node;
         }
 
         private void AddSubDirectories(DirectoryInfo source, FileNode dest)
         {
+            DirectoryInfo[] directories;
+            try
+            {
+                directories = source.GetDirectories();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                dest.AccessBanned = true;
+                return;
+            }
+
             dest.SubNodes ??= new List<FileNode>();
 
             foreach (DirectoryInfo directory in source.GetDirectories())
             {
-                FileNode node = GetSubDirectory(directory);
+                FileNode node = ProcessingDirectory(directory);
                 dest.SubNodes.Add(node);
                 dest.Size += node.Size;
                 dest.Allocated += node.Allocated;
@@ -56,6 +70,9 @@ namespace Task10.Services
 
         private void AddSubFiles(DirectoryInfo sourse, FileNode dest)
         {
+            if (dest.AccessBanned)
+                return;
+
             dest.SubNodes ??= new List<FileNode>();
 
             foreach (FileInfo file in sourse.GetFiles())
@@ -79,24 +96,10 @@ namespace Task10.Services
             return node;
         }
 
-
         private void Calculating(DirectoryInfo sourse, FileNode dest)
         {
             dest.Name = sourse.Name;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         public static long GetFileSizeOnDisk(string file)
         {

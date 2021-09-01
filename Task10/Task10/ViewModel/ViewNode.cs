@@ -12,11 +12,7 @@ namespace Task10.ViewModel
     class ViewNode : INotifyPropertyChanged
     {
         public FileNode File { get; set; }
-        //public string DisplayName { get; set; }
         public string Type { get; set; }
-        //public string Picture { get; set; }
-        //public string DisplaySize { get; set; }
-        //public string DisplayAllocated { get; set; }
         public double ParentPercentage { get; set; }
         public string ExpButtonVisible { get; set; }
         public int Level { get; set; }
@@ -56,7 +52,6 @@ namespace Task10.ViewModel
                 OnPropertyChanged();
             }
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 

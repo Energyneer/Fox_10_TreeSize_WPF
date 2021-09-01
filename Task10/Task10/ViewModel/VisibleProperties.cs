@@ -6,20 +6,16 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Task10.ViewModel
 {
     class VisibleProperties : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private string NoActiveSizeButtons;
-
         public VisibleProperties()
         {
-            BGButtonSizeAuto = Constants.SizeButtonsSelected;
-            //NoActiveSizeButtons = Brushes.Red.ToString();
-            NoActiveSizeButtons = "AliceBlue";
             ResetColorAllSizeButtons();
+            BGButtonSizeAuto = Constants.SizeButtonsSelected;
         }
 
         private string bgButtonSizeAuto;
@@ -66,18 +62,26 @@ namespace Task10.ViewModel
             }
         }
 
-        public double ColumnAllocatedOldWidth { get; set; }
-        public double ColumnSubFoldersOldWidth { get; set; }
-        public double ColumnSubFilesOldWidth { get; set; }
-        public double ColumnPercentParentOldWidth { get; set; }
+        private bool busyIndicator;
+        public bool BusyIndicator
+        {
+            get { return busyIndicator; }
+            set
+            {
+                busyIndicator = value;
+                OnPropertyChanged();
+            }
+        }
 
         public void ResetColorAllSizeButtons()
         {
-            BGButtonSizeAuto = NoActiveSizeButtons;
-            BGButtonSizeKiB = NoActiveSizeButtons;
-            BGButtonSizeMiB = NoActiveSizeButtons;
-            BGButtonSizeGiB = NoActiveSizeButtons;
+            BGButtonSizeAuto = Constants.SizeButtonsUnSelect;
+            BGButtonSizeKiB = Constants.SizeButtonsUnSelect;
+            BGButtonSizeMiB = Constants.SizeButtonsUnSelect;
+            BGButtonSizeGiB = Constants.SizeButtonsUnSelect;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

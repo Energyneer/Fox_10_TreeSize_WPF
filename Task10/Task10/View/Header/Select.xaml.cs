@@ -14,9 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Task10.ViewModel;
 
-namespace Task10
+namespace Task10.View.Header
 {
-    public partial class MainWindow : Window
+    public partial class Select : UserControl
     {
         private ViewModelContext Context
         {
@@ -25,36 +25,14 @@ namespace Task10
                 return this.DataContext as ViewModelContext;
             }
         }
-
-        public MainWindow()
+        public Select()
         {
             InitializeComponent();
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            Context.ClickExpCollapseButton(button.DataContext as ViewNode); 
-        }
-
-        private void HeaderClickAllocated(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void HeaderClickSubFolders(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void HeaderClickSubFiles(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void HeaderClickPercentParent(object sender, RoutedEventArgs e)
-        {
-
+            Context.SelectFolder();
         }
     }
 }

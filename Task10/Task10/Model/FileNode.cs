@@ -17,5 +17,6 @@ namespace Task10.Model
         public DateTime Created { get; set; }
         public DateTime Modificated { get; set; }
         public bool IsFile { get; set; }
+        public bool AccessBanned { get; set; }
     }
 }

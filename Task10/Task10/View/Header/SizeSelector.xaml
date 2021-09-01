@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Task10.View.Header.SizeSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Task10.ViewModel"
+             mc:Ignorable="d">
+    <Border Height="46" BorderThickness="1" BorderBrush="DarkGray" CornerRadius="2" Margin="5 0 0 0">
+        <StackPanel HorizontalAlignment="Center" Margin="5 0 5 0">
+            <TextBlock HorizontalAlignment="Center">Size units:</TextBlock>
+            <WrapPanel>
+                <Button x:Name="ButtonSizeAuto" Width="60" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeAuto}">AUTO</Button>
+                <Button x:Name="ButtonSizeKB" Width="40" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeKiB}">KB</Button>
+                <Button x:Name="ButtonSizeMB" Width="40" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeMiB}">MB</Button>
+                <Button x:Name="ButtonSizeGB" Width="40" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeGiB}">GB</Button>
+            </WrapPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:Task10.ViewModel"
+        xmlns:head="clr-namespace:Task10.View.Header"
         mc:Ignorable="d"
         Title="File Explorer" Height="450" Width="800">
-    <xctk:BusyIndicator x:Name="BusyInd" IsBusy="{Binding BusyIndicator}">
+    <Window.DataContext >
+        <local:ViewModelContext/>
+    </Window.DataContext>
+    <xctk:BusyIndicator x:Name="BusyInd" IsBusy="{Binding VProperties.BusyIndicator}">
         <xctk:BusyIndicator.BusyContentTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
@@ -17,56 +22,7 @@
         </xctk:BusyIndicator.BusyContentTemplate>
 
         <StackPanel Orientation="Vertical">
-            <Grid Height="50">
-                <StackPanel Orientation="Horizontal">
-                    <Border Height="46" BorderThickness="1" BorderBrush="DarkGray" CornerRadius="2" Margin="5 0 0 0">
-                        <StackPanel Margin="5 0 5 0">
-                            <TextBlock HorizontalAlignment="Center">Select:</TextBlock>
-                            <WrapPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button x:Name="OpenFile" Height="25" Background="Transparent" BorderThickness="0" Click="OpenFile_Click_1">
-                                        <Button.Content>
-                                            <Image Source="C:\Users\goncharov\Documents\DATA\Git\Foxminded\task10\Task10\Task10\Static\FolderOpened_grey_16x.png"></Image>
-                                        </Button.Content>
-                                    </Button>
-                                    <TextBlock Text="Folder" Margin="5 0 0 0"></TextBlock>
-                                </StackPanel>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Height="46" BorderThickness="1" BorderBrush="DarkGray" CornerRadius="2" Margin="5 0 0 0">
-                        <StackPanel HorizontalAlignment="Center" Margin="5 0 5 0">
-                            <TextBlock HorizontalAlignment="Center">Size units:</TextBlock>
-                            <WrapPanel>
-                                <Button x:Name="ButtonSizeAuto" Width="60" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeAuto}">AUTO</Button>
-                                <Button x:Name="ButtonSizeKB" Width="40" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeKiB}">KB</Button>
-                                <Button x:Name="ButtonSizeMB" Width="40" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeMiB}">MB</Button>
-                                <Button x:Name="ButtonSizeGB" Width="40" Height="25" Click="Button_Size_Click" Background="{Binding VProperties.BGButtonSizeGiB}">GB</Button>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Height="46" BorderThickness="1" BorderBrush="DarkGray" CornerRadius="2" Margin="5 0 0 0">
-                        <StackPanel HorizontalAlignment="Center" Margin="5 0 5 0">
-                            <TextBlock HorizontalAlignment="Center">Visible:</TextBlock>
-                            <WrapPanel Margin="0 6 0 0">
-                                <CheckBox Click="CheckBoxVisibleAllocated" IsChecked="True" Margin="2"></CheckBox>
-                                <TextBlock Margin="2">Allocated</TextBlock>
-                                <GridSplitter></GridSplitter>
-                                <CheckBox Click="CheckBoxVisibleSubFolders" IsChecked="True" Margin="2"></CheckBox>
-                                <TextBlock Margin="2">SubFolders</TextBlock>
-                                <GridSplitter></GridSplitter>
-                                <CheckBox Click="CheckBoxVisibleSubFiles" IsChecked="True" Margin="2"></CheckBox>
-                                <TextBlock Margin="2">SubFiles</TextBlock>
-                                <GridSplitter></GridSplitter>
-                                <CheckBox Click="CheckBoxVisiblePercentParent" IsChecked="True" Margin="2"></CheckBox>
-                                <TextBlock Margin="2">% of Parent</TextBlock>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </Grid>
+            <head:Header DataContext="{Binding}"/>
             <ListView ItemsSource="{Binding Nodes}" Margin="5 0 5 0">
                 <ListView.View>
                     <GridView>
@@ -76,7 +32,7 @@
                                     <StackPanel Orientation="Horizontal" Margin="{Binding LLL}">
                                         <Button x:Name="OpenFile" Click="OpenFile_Click" Height="18" Width="18" Background="Transparent" BorderThickness="0" Visibility="{Binding ExpButtonVisible}">
                                             <Button.Content>
-                                                <Image Source="ExpImage.png"></Image>
+                                                <Image Source="{Binding Picture}"></Image>
                                             </Button.Content>
                                         </Button>
                                         <TextBlock Text="{Binding File.Name}" Margin="5 0 0 0"></TextBlock>
@@ -87,20 +43,20 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Type}" Width="80">Type</GridViewColumn>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=DisplaySize}" Width="100">Size</GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnAllocated" DisplayMemberBinding="{Binding Path=DisplayAllocated}" Width="80">
-                            <GridViewColumnHeader x:Name="HeaderAllocated" Click="HeaderClickAllocated">Allocated</GridViewColumnHeader>
+                        <GridViewColumn x:Name="ColumnAllocated" DisplayMemberBinding="{Binding Path=DisplayAllocated}" Width="{Binding SizeProperties.ColumnAllocatedWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderAllocated" Click="HeaderClickAllocated" Visibility="{Binding SizeProperties.ColumnAllocatedVisibility}">Allocated</GridViewColumnHeader>
                         </GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnSubFolders" DisplayMemberBinding="{Binding Path=File.SubFoldersCount}" Width="80">
-                            <GridViewColumnHeader x:Name="HeaderSubFolders" Click="HeaderClickSubFolders">SubFolders</GridViewColumnHeader>
+                        <GridViewColumn x:Name="ColumnSubFolders" DisplayMemberBinding="{Binding Path=File.SubFoldersCount}" Width="{Binding SizeProperties.ColumnSubFoldersWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderSubFolders" Click="HeaderClickSubFolders" Visibility="{Binding SizeProperties.ColumnSubFoldersVisibility}">SubFolders</GridViewColumnHeader>
                         </GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnSubFiles" DisplayMemberBinding="{Binding Path=File.SubFilesCount}" Width="80">
-                            <GridViewColumnHeader x:Name="HeaderSubFiles" Click="HeaderClickSubFiles">SubFiles</GridViewColumnHeader>
+                        <GridViewColumn x:Name="ColumnSubFiles" DisplayMemberBinding="{Binding Path=File.SubFilesCount}" Width="{Binding SizeProperties.ColumnSubFilesWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderSubFiles" Click="HeaderClickSubFiles" Visibility="{Binding SizeProperties.ColumnSubFilesVisibility}">SubFiles</GridViewColumnHeader>
                         </GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnPercentParent">
-                            <GridViewColumnHeader x:Name="HeaderPercentParent" Click="HeaderClickPercentParent">% of Parent</GridViewColumnHeader>
+                        <GridViewColumn x:Name="ColumnPercentParent" Width="{Binding SizeProperties.ColumnPercentParentWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderPercentParent" Click="HeaderClickPercentParent" Visibility="{Binding SizeProperties.ColumnPercentParentVisibility}">% of Parent</GridViewColumnHeader>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
