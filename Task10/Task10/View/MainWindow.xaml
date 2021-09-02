@@ -7,61 +7,103 @@
         xmlns:local="clr-namespace:Task10.ViewModel"
         xmlns:head="clr-namespace:Task10.View.Header"
         mc:Ignorable="d"
-        Title="File Explorer" Height="450" Width="800">
+        Title="File Explorer" Height="480" Width="932">
     <Window.DataContext >
         <local:ViewModelContext/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+    </Window.Resources>
     <xctk:BusyIndicator x:Name="BusyInd" IsBusy="{Binding VProperties.BusyIndicator}">
-        <xctk:BusyIndicator.BusyContentTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Height="20">Processing...</TextBlock>
-                    <Button Width="50" Height="20" Margin="10 0 0 0">Cancel</Button>
-                </StackPanel>
-            </DataTemplate>
-        </xctk:BusyIndicator.BusyContentTemplate>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical">
-            <head:Header DataContext="{Binding}"/>
-            <ListView ItemsSource="{Binding Nodes}" Margin="5 0 5 0">
+            <head:Header DataContext="{Binding}" Grid.Row="0"/>
+            <ListView ItemsSource="{Binding Nodes}" Margin="5 0 5 0" Grid.Row="1">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Name" Width="200">
+                        <GridViewColumn Width="200">
+                            <GridViewColumnHeader Click="HeaderClickName" Background="{Binding VProperties.BGColumnName}">Name</GridViewColumnHeader>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="{Binding LLL}">
+                                    <StackPanel Orientation="Horizontal" Margin="{Binding MarginLeft}">
                                         <Button x:Name="OpenFile" Click="OpenFile_Click" Height="18" Width="18" Background="Transparent" BorderThickness="0" Visibility="{Binding ExpButtonVisible}">
                                             <Button.Content>
                                                 <Image Source="{Binding Picture}"></Image>
                                             </Button.Content>
                                         </Button>
-                                        <TextBlock Text="{Binding File.Name}" Margin="5 0 0 0"></TextBlock>
+                                        <TextBlock Text="{Binding File.Name}" Margin="5 0 0 0" Foreground="{Binding TextNameColor}"></TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Type}" Width="80">Type</GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=DisplaySize}" Width="100">Size</GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnAllocated" DisplayMemberBinding="{Binding Path=DisplayAllocated}" Width="{Binding SizeProperties.ColumnAllocatedWidth, Mode=TwoWay}">
-                            <GridViewColumnHeader x:Name="HeaderAllocated" Click="HeaderClickAllocated" Visibility="{Binding SizeProperties.ColumnAllocatedVisibility}">Allocated</GridViewColumnHeader>
+                        <GridViewColumn Width="80">
+                            <GridViewColumnHeader>Type</GridViewColumnHeader>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Type}" Foreground="{Binding TextDataColor}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnSubFolders" DisplayMemberBinding="{Binding Path=File.SubFoldersCount}" Width="{Binding SizeProperties.ColumnSubFoldersWidth, Mode=TwoWay}">
-                            <GridViewColumnHeader x:Name="HeaderSubFolders" Click="HeaderClickSubFolders" Visibility="{Binding SizeProperties.ColumnSubFoldersVisibility}">SubFolders</GridViewColumnHeader>
+                        <GridViewColumn x:Name="ColumnSize" Width="100">
+                            <GridViewColumnHeader x:Name="HeaderSize" Click="HeaderClickSize" Background="{Binding VProperties.BGColumnSize}">Size</GridViewColumnHeader>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=DisplaySize}" Foreground="{Binding TextDataColor}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        
+                        <GridViewColumn x:Name="ColumnAllocated" Width="{Binding SizeProperties.ColumnAllocatedWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderAllocated" Click="HeaderClickAllocated" Visibility="{Binding SizeProperties.ColumnAllocatedVisibility}" Background="{Binding VProperties.BGColumnAllocated}">Allocated</GridViewColumnHeader>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=DisplayAllocated}" Foreground="{Binding TextDataColor}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn x:Name="ColumnSubFiles" DisplayMemberBinding="{Binding Path=File.SubFilesCount}" Width="{Binding SizeProperties.ColumnSubFilesWidth, Mode=TwoWay}">
-                            <GridViewColumnHeader x:Name="HeaderSubFiles" Click="HeaderClickSubFiles" Visibility="{Binding SizeProperties.ColumnSubFilesVisibility}">SubFiles</GridViewColumnHeader>
+                        <GridViewColumn Width="140">
+                            <GridViewColumnHeader Click="HeaderClickCreated" Background="{Binding VProperties.BGColumnCreated}">Created</GridViewColumnHeader>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=File.Created}" Foreground="{Binding TextDataColor}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn x:Name="ColumnSubFolders" Width="{Binding SizeProperties.ColumnSubFoldersWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderSubFolders" Visibility="{Binding SizeProperties.ColumnSubFoldersVisibility}">SubFolders</GridViewColumnHeader>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=File.SubFoldersCount}" Foreground="{Binding TextDataColor}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn x:Name="ColumnSubFiles" Width="{Binding SizeProperties.ColumnSubFilesWidth, Mode=TwoWay}">
+                            <GridViewColumnHeader x:Name="HeaderSubFiles" Visibility="{Binding SizeProperties.ColumnSubFilesVisibility}">SubFiles</GridViewColumnHeader>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=File.SubFilesCount}" Foreground="{Binding TextDataColor}" TextAlignment="Center"></TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
                         <GridViewColumn x:Name="ColumnPercentParent" Width="{Binding SizeProperties.ColumnPercentParentWidth, Mode=TwoWay}">
-                            <GridViewColumnHeader x:Name="HeaderPercentParent" Click="HeaderClickPercentParent" Visibility="{Binding SizeProperties.ColumnPercentParentVisibility}">% of Parent</GridViewColumnHeader>
+                            <GridViewColumnHeader x:Name="HeaderPercentParent" Visibility="{Binding SizeProperties.ColumnPercentParentVisibility}">% of Parent</GridViewColumnHeader>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
-                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding ParentPercentage}" Height="15" Width="80" Background="AliceBlue" Foreground="LightSteelBlue"/>
-                                        <TextBlock Text="{Binding ParentPercentage, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding ParentPercentage}" Height="15" Width="{Binding SizeProperties.ColumnPercentParentWidth}" Background="AliceBlue" Foreground="DodgerBlue"/>
+                                        <TextBlock Text="{Binding ParentPercentage, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding TextDataColor}" />
                                     </Grid>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -69,6 +111,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-        </StackPanel>
+        </Grid>
+
     </xctk:BusyIndicator>
 </Window>

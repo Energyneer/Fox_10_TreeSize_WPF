@@ -48,7 +48,7 @@ namespace Task10.Services
             {
                 directories = source.GetDirectories();
             }
-            catch (UnauthorizedAccessException)
+            catch
             {
                 dest.AccessBanned = true;
                 return;
@@ -92,13 +92,16 @@ namespace Task10.Services
             node.Size = fInfo.Length;
             node.Allocated = GetFileSizeOnDisk(fInfo.FullName);
             node.IsFile = true;
-
+            node.Created = fInfo.CreationTime;
+            node.Modificated = fInfo.LastWriteTime;
             return node;
         }
 
         private void Calculating(DirectoryInfo sourse, FileNode dest)
         {
             dest.Name = sourse.Name;
+            dest.Created = sourse.CreationTime;
+            dest.Modificated = sourse.LastWriteTime;
         }
 
         public static long GetFileSizeOnDisk(string file)

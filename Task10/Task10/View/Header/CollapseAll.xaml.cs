@@ -16,7 +16,7 @@ using Task10.ViewModel;
 
 namespace Task10.View.Header
 {
-    public partial class Select : UserControl
+    public partial class CollapseAll : UserControl
     {
         private ViewModelContext Context
         {
@@ -26,16 +26,14 @@ namespace Task10.View.Header
             }
         }
 
-        public Select()
+        public CollapseAll()
         {
             InitializeComponent();
         }
 
-        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        private void COllapseAll_Click(object sender, RoutedEventArgs e)
         {
-            Context.VProperties.BusyIndicator = true;
-            Context.SelectFolder();
-            Context.VProperties.BusyIndicator = false;
+            Context.CollapseAll();
         }
     }
 }

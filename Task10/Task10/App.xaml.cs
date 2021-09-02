@@ -10,6 +10,5 @@ namespace Task10
 {
     public partial class App : Application
     {
-        
     }
 }

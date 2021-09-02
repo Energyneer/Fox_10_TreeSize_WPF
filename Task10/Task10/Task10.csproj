@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Static\CollapseAll.ico" />
     <None Remove="Static\CollapseAll_16x.png" />
     <None Remove="Static\ExpandAll_16x.png" />
-    <None Remove="Static\FolderOpened_grey_16x.png" />
+    <None Remove="Static\SelectFolder.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,13 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Static\CollapseAll.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Static\CollapseAll_16x.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Static\ExpandAll_16x.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Static\FolderOpened_grey_16x.png">
+    <Resource Include="Static\SelectFolder.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

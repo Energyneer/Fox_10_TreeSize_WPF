@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 using Task10.Model;
 using Task10.Services;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Windows.Media;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Drawing;
 
 namespace Task10.ViewModel
 {
@@ -19,6 +18,7 @@ namespace Task10.ViewModel
     {
         public ObservableCollection<ViewNode> Nodes { get; set; }
         public SizeFormat CurrentSizeFormat { get; set; }
+        public SortAttribute CurrentSortDirect { get; set; }
         public VisibleProperties VProperties { get; set; }
         public ColumnSizeProperties SizeProperties { get; set; }
         private IDirectoryService Service { get; }
@@ -45,32 +45,24 @@ namespace Task10.ViewModel
             folderBrowser.ShowDialog();
             if (folderBrowser.SelectedPath == null || folderBrowser.SelectedPath.Length < 1)
                 return;
-            VProperties.BusyIndicator = true;
             SelectNewPath(folderBrowser.SelectedPath);
-            VProperties.BusyIndicator = false;
         }
 
         private void SelectNewPath(string path)
         {
-            Nodes.Clear();
-            //FileNode rootNode = service.GetAllNodes(path);
             FileNode rootNode = null;
             Thread thread = new Thread(() => rootNode = Service.GetAllNodes(path));
             thread.Start();
             thread.Join();
 
-
             ViewNode view = new ViewNode();
-            view.File = rootNode;
-            view.Type = "Folder";
-            view.DisplaySize = Utilities.DisplaySize(rootNode.Size, CurrentSizeFormat);
-            view.DisplayAllocated = Utilities.DisplaySize(rootNode.Allocated, CurrentSizeFormat);
             view.Level = 0;
-            view.LLL = "0 0 0 0";
-            view.Picture = "/Static/ExpandAll_16x.png";
+            WriteViewNodeParams(view, rootNode);
+            view.MarginLeft = "0 0 0 0";
             view.ExpButtonVisible = "Visible";
-            Nodes.Add(view);
 
+            Nodes.Clear();
+            Nodes.Add(view);
             ExpandItem(view);
         }
 
@@ -92,24 +84,18 @@ namespace Task10.ViewModel
         {
             long parentSize = view.File.Size;
             List<FileNode> files = view.File.SubNodes;
-
+            Sorting(files);
             int index = Nodes.IndexOf(view);
 
             foreach (FileNode f in files)
             {
                 ViewNode node = new ViewNode();
-                node.File = f;
-                node.Type = f.IsFile ? Utilities.GetFileType(f.Name.Substring(f.Name.LastIndexOf('.') + 1)) : "Folder";
                 node.Level = view.Level + 1;
-                node.LLL = node.Level * 10 + " 0 0 0";
-                node.Picture = f.IsFile ? null : "/Static/ExpandAll_16x.png";
-                node.ExpButtonVisible = f.IsFile ? "Hidden" : "Visible";
+                WriteViewNodeParams(node, f);
                 node.ParentPercentage = 100.0 * f.Size / parentSize;
-                node.DisplaySize = Utilities.DisplaySize(f.Size, CurrentSizeFormat);
-                node.DisplayAllocated = Utilities.DisplaySize(f.Allocated, CurrentSizeFormat);
                 Nodes.Insert(++index, node);
             }
-
+            view.Expanded = true;
             view.Picture = "/Static/CollapseAll_16x.png";
         }
 
@@ -118,9 +104,19 @@ namespace Task10.ViewModel
             List<FileNode> files = view.File.SubNodes;
             foreach (FileNode f in files)
             {
-                Nodes.Remove(Nodes.First(item => item.File == f));
+                ViewNode node = Nodes.First(item => item.File == f);
+                if (node.Expanded)
+                    CollapseItem(node);
+                Nodes.Remove(node);
             }
+            view.Expanded = false;
             view.Picture = "/Static/ExpandAll_16x.png";
+        }
+
+        public void CollapseAll()
+        {
+            if (Nodes.Count > 0)
+                CollapseItem(Nodes.First());
         }
 
         public void ChangeSizeFormat(SizeFormat format)
@@ -133,9 +129,96 @@ namespace Task10.ViewModel
             CurrentSizeFormat = format;
         }
 
-        public void Sorting(SortAttribute sort)
+        public void Sorting(List<FileNode> nodes)
         {
-            //
+            List<FileNode> folders = nodes.Where(item => !item.IsFile).ToList();
+            List<FileNode> files = nodes.Where(item => item.IsFile).ToList();
+
+            switch (CurrentSortDirect)
+            {
+                case SortAttribute.NAME_DOWN:
+                    folders.Sort((x, y) => x.Name.CompareTo(y.Name) * (-1));
+                    files.Sort((x, y) => x.Name.CompareTo(y.Name) * (-1)); 
+                    break;
+                case SortAttribute.SIZE_UP:
+                    folders.Sort((x, y) => x.Size.CompareTo(y.Size));
+                    files.Sort((x, y) => x.Size.CompareTo(y.Size)); 
+                    break;
+                case SortAttribute.SIZE_DOWN:
+                    folders.Sort((x, y) => x.Size.CompareTo(y.Size) * (-1));
+                    files.Sort((x, y) => x.Size.CompareTo(y.Size) * (-1)); 
+                    break;
+                case SortAttribute.ALLOCATED_UP:
+                    folders.Sort((x, y) => x.Allocated.CompareTo(y.Allocated));
+                    files.Sort((x, y) => x.Allocated.CompareTo(y.Allocated)); 
+                    break;
+                case SortAttribute.ALLOCATED_DOWN:
+                    folders.Sort((x, y) => x.Allocated.CompareTo(y.Allocated) * (-1));
+                    files.Sort((x, y) => x.Allocated.CompareTo(y.Allocated) * (-1)); 
+                    break;
+                case SortAttribute.CREATED_UP:
+                    folders.Sort((x, y) => x.Created.CompareTo(y.Created));
+                    files.Sort((x, y) => x.Created.CompareTo(y.Created)); 
+                    break;
+                case SortAttribute.CREATED_DOWN:
+                    folders.Sort((x, y) => x.Created.CompareTo(y.Created) * (-1));
+                    files.Sort((x, y) => x.Created.CompareTo(y.Created) * (-1)); 
+                    break;
+
+                case SortAttribute.NAME_UP:
+                default:
+                    folders.Sort((x, y) => x.Name.CompareTo(y.Name));
+                    files.Sort((x, y) => x.Name.CompareTo(y.Name)); 
+                    break;
+            }
+
+            nodes.Clear();
+            nodes.AddRange(folders);
+            nodes.AddRange(files);
+        }
+
+        public void ChangeSort(SortAttribute sort)
+        {
+            List<ViewNode> expandedNodes = Nodes.Where(item => item.Expanded).ToList();
+            CollapseAll();
+            CurrentSortDirect = sort;
+            foreach (ViewNode node in expandedNodes)
+            {
+                ExpandItem(node);
+            }
+            ChangeColumnColor(sort);
+        }
+
+        private void ChangeColumnColor(SortAttribute sort)
+        {
+            VProperties.SetDefaultColumnBackground();
+            switch (sort)
+            {
+                case SortAttribute.NAME_UP:
+                case SortAttribute.NAME_DOWN: VProperties.BGColumnName = Constants.ColumnSelect; break;
+                case SortAttribute.SIZE_UP:
+                case SortAttribute.SIZE_DOWN: VProperties.BGColumnSize = Constants.ColumnSelect; break;
+                case SortAttribute.ALLOCATED_UP:
+                case SortAttribute.ALLOCATED_DOWN: VProperties.BGColumnAllocated = Constants.ColumnSelect; break;
+                case SortAttribute.CREATED_UP:
+                case SortAttribute.CREATED_DOWN: VProperties.BGColumnCreated = Constants.ColumnSelect; break;
+            }
+        }
+
+        private void WriteViewNodeParams(ViewNode view, FileNode file)
+        {
+            view.File = file;
+            view.Type = file.IsFile ? Utilities.GetFileType(file.Name.Substring(file.Name.LastIndexOf('.') + 1)) : "Folder";
+            view.MarginLeft = view.Level * 10 + " 0 0 0";
+            view.Picture = file.IsFile ? null : "/Static/ExpandAll_16x.png";
+            view.ExpButtonVisible = file.IsFile ? "Hidden" : "Visible";
+            view.DisplaySize = Utilities.DisplaySize(file.Size, CurrentSizeFormat);
+            view.DisplayAllocated = Utilities.DisplaySize(file.Allocated, CurrentSizeFormat);
+            if (file.AccessBanned)
+            {
+                view.TextNameColor = Constants.TextNameAccessBanned;
+                view.TextDataColor = Constants.TextDataAccessBanned;
+            }
         }
     }
 }

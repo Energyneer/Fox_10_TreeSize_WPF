@@ -10,6 +10,7 @@
             <local:Select DataContext="{Binding}"/>
             <local:SizeSelector DataContext="{Binding}"/>
             <local:Visibility DataContext="{Binding}"/>
+            <local:CollapseAll DataContext="{Binding}"/>
         </StackPanel>
     </Grid>
 </UserControl>

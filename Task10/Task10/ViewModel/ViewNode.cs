@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Task10.Model;
 
 namespace Task10.ViewModel
@@ -16,9 +18,14 @@ namespace Task10.ViewModel
         public double ParentPercentage { get; set; }
         public string ExpButtonVisible { get; set; }
         public int Level { get; set; }
-        public string LLL { get; set; }
+        public string MarginLeft { get; set; }
         public bool Expanded { get; set; }
 
+        public ViewNode()
+        {
+            TextNameColor = Constants.TextNameOK;
+            TextDataColor = Constants.TextDataOK;
+        }
 
         private string picture;
         public string Picture
@@ -53,6 +60,28 @@ namespace Task10.ViewModel
             }
         }
 
+        private string textNameColor;
+        public string TextNameColor
+        {
+            get { return textNameColor; }
+            set
+            {
+                textNameColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string textDataColor;
+        public string TextDataColor
+        {
+            get { return textDataColor; }
+            set
+            {
+                textDataColor = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -77,7 +106,7 @@ namespace Task10.ViewModel
         SIZE_DOWN,
         ALLOCATED_UP,
         ALLOCATED_DOWN,
-        PERCENTAGE_UP,
-        PERCENTAGE_DOWN
+        CREATED_UP,
+        CREATED_DOWN
     }
 }

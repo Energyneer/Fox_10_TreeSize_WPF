@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Task10.ViewModel
 {
@@ -15,6 +17,7 @@ namespace Task10.ViewModel
         public VisibleProperties()
         {
             ResetColorAllSizeButtons();
+            SetDefaultColumnBackground();
             BGButtonSizeAuto = Constants.SizeButtonsSelected;
         }
 
@@ -62,6 +65,50 @@ namespace Task10.ViewModel
             }
         }
 
+        private string bgColumnName;
+        public string BGColumnName
+        {
+            get { return bgColumnName; }
+            set
+            {
+                bgColumnName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string bgColumnSize;
+        public string BGColumnSize
+        {
+            get { return bgColumnSize; }
+            set
+            {
+                bgColumnSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string bgColumnAllocated;
+        public string BGColumnAllocated
+        {
+            get { return bgColumnAllocated; }
+            set
+            {
+                bgColumnAllocated = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string bgColumnCreated;
+        public string BGColumnCreated
+        {
+            get { return bgColumnCreated; }
+            set
+            {
+                bgColumnCreated = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool busyIndicator;
         public bool BusyIndicator
         {
@@ -79,6 +126,14 @@ namespace Task10.ViewModel
             BGButtonSizeKiB = Constants.SizeButtonsUnSelect;
             BGButtonSizeMiB = Constants.SizeButtonsUnSelect;
             BGButtonSizeGiB = Constants.SizeButtonsUnSelect;
+        }
+
+        public void SetDefaultColumnBackground()
+        {
+            BGColumnName = Constants.ColumnUnSelect;
+            BGColumnSize = Constants.ColumnUnSelect;
+            BGColumnAllocated = Constants.ColumnUnSelect;
+            BGColumnCreated = Constants.ColumnUnSelect;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
