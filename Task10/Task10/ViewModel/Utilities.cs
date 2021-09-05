@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task10.ViewModel
 {
@@ -11,7 +8,7 @@ namespace Task10.ViewModel
         static readonly string[] SizeSuffixes =
                    { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
 
-        static readonly Dictionary<string, string> Extends = new Dictionary<string, string> { 
+        static readonly Dictionary<string, string> Extends = new Dictionary<string, string> {
             { "exe", "Application" },
             { "doc", "Document" },
             { "docx", "Document" },

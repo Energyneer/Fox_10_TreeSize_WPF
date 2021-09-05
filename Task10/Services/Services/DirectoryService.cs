@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Services.Model;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Task10.Model;
 
-namespace Task10.Services
+namespace Services.Services
 {
-    class DirectoryService : IDirectoryService
+    public class DirectoryService : IDirectoryService
     {
         public FileNode GetAllNodes(string path)
         {

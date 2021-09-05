@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Task10.Model
+namespace Services.Model
 {
-    class FileNode
+    public class FileNode
     {
         public List<FileNode> SubNodes { get; set; }
         public string Name { get; set; }

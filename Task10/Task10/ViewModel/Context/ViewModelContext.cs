@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Services.Model;
+using Services.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Task10.Model;
-using Task10.Services;
-using System.Windows.Forms;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Drawing;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace Task10.ViewModel
 {
@@ -36,7 +33,7 @@ namespace Task10.ViewModel
             Nodes = new ObservableCollection<ViewNode>();
             VProperties = new VisibleProperties();
             SizeProperties = new ColumnSizeProperties();
-            SelectNewPath(".");
+            SelectNewPath(Constants.DefaultFolder);
         }
 
         public void SelectFolder()
@@ -58,8 +55,8 @@ namespace Task10.ViewModel
             ViewNode view = new ViewNode();
             view.Level = 0;
             WriteViewNodeParams(view, rootNode);
-            view.MarginLeft = "0 0 0 0";
-            view.ExpButtonVisible = "Visible";
+            view.MarginLeft = Constants.LeftMarginFirstLevel + Constants.MarginListNodeSfx;
+            view.ExpButtonVisible = Visibility.Visible;
 
             Nodes.Clear();
             Nodes.Add(view);
@@ -138,37 +135,37 @@ namespace Task10.ViewModel
             {
                 case SortAttribute.NAME_DOWN:
                     folders.Sort((x, y) => x.Name.CompareTo(y.Name) * (-1));
-                    files.Sort((x, y) => x.Name.CompareTo(y.Name) * (-1)); 
+                    files.Sort((x, y) => x.Name.CompareTo(y.Name) * (-1));
                     break;
                 case SortAttribute.SIZE_UP:
                     folders.Sort((x, y) => x.Size.CompareTo(y.Size));
-                    files.Sort((x, y) => x.Size.CompareTo(y.Size)); 
+                    files.Sort((x, y) => x.Size.CompareTo(y.Size));
                     break;
                 case SortAttribute.SIZE_DOWN:
                     folders.Sort((x, y) => x.Size.CompareTo(y.Size) * (-1));
-                    files.Sort((x, y) => x.Size.CompareTo(y.Size) * (-1)); 
+                    files.Sort((x, y) => x.Size.CompareTo(y.Size) * (-1));
                     break;
                 case SortAttribute.ALLOCATED_UP:
                     folders.Sort((x, y) => x.Allocated.CompareTo(y.Allocated));
-                    files.Sort((x, y) => x.Allocated.CompareTo(y.Allocated)); 
+                    files.Sort((x, y) => x.Allocated.CompareTo(y.Allocated));
                     break;
                 case SortAttribute.ALLOCATED_DOWN:
                     folders.Sort((x, y) => x.Allocated.CompareTo(y.Allocated) * (-1));
-                    files.Sort((x, y) => x.Allocated.CompareTo(y.Allocated) * (-1)); 
+                    files.Sort((x, y) => x.Allocated.CompareTo(y.Allocated) * (-1));
                     break;
                 case SortAttribute.CREATED_UP:
                     folders.Sort((x, y) => x.Created.CompareTo(y.Created));
-                    files.Sort((x, y) => x.Created.CompareTo(y.Created)); 
+                    files.Sort((x, y) => x.Created.CompareTo(y.Created));
                     break;
                 case SortAttribute.CREATED_DOWN:
                     folders.Sort((x, y) => x.Created.CompareTo(y.Created) * (-1));
-                    files.Sort((x, y) => x.Created.CompareTo(y.Created) * (-1)); 
+                    files.Sort((x, y) => x.Created.CompareTo(y.Created) * (-1));
                     break;
 
                 case SortAttribute.NAME_UP:
                 default:
                     folders.Sort((x, y) => x.Name.CompareTo(y.Name));
-                    files.Sort((x, y) => x.Name.CompareTo(y.Name)); 
+                    files.Sort((x, y) => x.Name.CompareTo(y.Name));
                     break;
             }
 
@@ -209,9 +206,9 @@ namespace Task10.ViewModel
         {
             view.File = file;
             view.Type = file.IsFile ? Utilities.GetFileType(file.Name.Substring(file.Name.LastIndexOf('.') + 1)) : "Folder";
-            view.MarginLeft = view.Level * 10 + " 0 0 0";
+            view.MarginLeft = view.Level * Constants.LeftMarginOffset + Constants.MarginListNodeSfx;
             view.Picture = file.IsFile ? null : "/Static/ExpandAll_16x.png";
-            view.ExpButtonVisible = file.IsFile ? "Hidden" : "Visible";
+            view.ExpButtonVisible = file.IsFile ? Visibility.Hidden : Visibility.Visible;
             view.DisplaySize = Utilities.DisplaySize(file.Size, CurrentSizeFormat);
             view.DisplayAllocated = Utilities.DisplaySize(file.Allocated, CurrentSizeFormat);
             if (file.AccessBanned)

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Task10.ViewModel
@@ -13,10 +8,10 @@ namespace Task10.ViewModel
     {
         public ColumnSizeProperties()
         {
-            ColumnAllocatedWidth = 100.0;
-            ColumnSubFoldersWidth = 80.0;
-            ColumnSubFilesWidth = 80.0;
-            ColumnPercentParentWidth = 100.0;
+            ColumnAllocatedWidth = Constants.MediumColumnWidth;
+            ColumnSubFoldersWidth = Constants.SmallColumnWidth;
+            ColumnSubFilesWidth = Constants.SmallColumnWidth;
+            ColumnPercentParentWidth = Constants.MediumColumnWidth;
             ColumnAllocatedVisibility = Visibility.Visible;
             ColumnSubFoldersVisibility = Visibility.Visible;
             ColumnSubFilesVisibility = Visibility.Visible;
